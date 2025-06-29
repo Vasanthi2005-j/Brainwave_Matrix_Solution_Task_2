@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BlogSpace - Your Personal Blogging Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* Button Styles */
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn-secondary:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+
+        /* Card Styles */
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 20px 0;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e8ed;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        /* Blog Post Styles */
+        .blog-post {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 20px 0;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .blog-post h2 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 1.8rem;
+        }
+
+        .blog-meta {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .blog-content {
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        .blog-actions {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        /* Comments Styles */
+        .comments-section {
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+            margin-top: 20px;
+        }
+
+        .comment {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+
+        .comment-author {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .comment-date {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .close {
+            position: absolute;
+            right: 20px;
+            top: 15px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            color: #aaa;
+        }
+
+        .close:hover {
+            color: #000;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .nav-buttons {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .blog-meta {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+
+            .blog-actions {
+                flex-wrap: wrap;
+            }
+
+            .btn {
+                padding: 8px 16px;
+                font-size: 12px;
+            }
+
+            .container {
+                padding: 10px;
+            }
+
+            .card, .blog-post {
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo {
+                font-size: 1.5rem;
+            }
+
+            .blog-post h2 {
+                font-size: 1.4rem;
+            }
+
+            .modal-content {
+                margin: 10% auto;
+                padding: 20px;
+            }
+        }
+
+        /* Utility Classes */
+        .hidden {
+            display: none !important;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .mb-20 {
+            margin-bottom: 20px;
+        }
+
+        .welcome-section {
+            text-align: center;
+            color: white;
+            padding: 60px 0;
+        }
+
+        .welcome-section h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .welcome-section p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+
+        .user-info {
+            color: #667eea;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-content">
+            <a href="#" class="logo" onclick="showHome()">BlogSpace</a>
+            <div class="nav-buttons">
+                <div id="guestNav">
+                    <button class="btn btn-secondary" onclick="showLogin()">Login</button>
+                    <button class="btn btn-primary" onclick="showSignup()">Sign Up</button>
+                </div>
+                <div id="userNav" class="hidden">
+                    <span class="user-info">Welcome, <span id="currentUser"></span>!</span>
+                    <button class="btn btn-primary" onclick="showCreatePost()">New Post</button>
+                    <button class="btn btn-secondary" onclick="logout()">Logout</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Welcome Section -->
+        <div id="welcomeSection" class="welcome-section">
+            <h1>Welcome to BlogSpace</h1>
+            <p>Share your thoughts, stories, and ideas with the world</p>
+            <button class="btn btn-primary" onclick="showSignup()">Get Started</button>
+        </div>
+
+        <!-- Blog Posts Container -->
+        <div id="blogContainer" class="hidden">
+            <div id="blogPosts"></div>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('loginModal')">&times;</span>
+            <h2 class="text-center mb-20">Login</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginEmail">Email:</label>
+                    <input type="email" id="loginEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password:</label>
+                    <input type="password" id="loginPassword" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Login</button>
+            </form>
+            <p class="text-center" style="margin-top: 15px;">
+                Don't have an account? <a href="#" onclick="showSignup()">Sign up</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Signup Modal -->
+    <div id="signupModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('signupModal')">&times;</span>
+            <h2 class="text-center mb-20">Sign Up</h2>
+            <form id="signupForm">
+                <div class="form-group">
+                    <label for="signupName">Full Name:</label>
+                    <input type="text" id="signupName" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupEmail">Email:</label>
+                    <input type="email" id="signupEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupPassword">Password:</label>
+                    <input type="password" id="signupPassword" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Sign Up</button>
+            </form>
+            <p class="text-center" style="margin-top: 15px;">
+                Already have an account? <a href="#" onclick="showLogin()">Login</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Create/Edit Post Modal -->
+    <div id="postModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('postModal')">&times;</span>
+            <h2 id="postModalTitle" class="text-center mb-20">Create New Post</h2>
+            <form id="postForm">
+                <div class="form-group">
+                    <label for="postTitle">Title:</label>
+                    <input type="text" id="postTitle" required>
+                </div>
+                <div class="form-group">
+                    <label for="postContent">Content:</label>
+                    <textarea id="postContent" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Publish Post</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let currentUser = null;
+        let editingPostId = null;
+        let users = JSON.parse(localStorage.getItem('blogUsers') || '[]');
+        let posts = JSON.parse(localStorage.getItem('blogPosts') || '[]');
+        let comments = JSON.parse(localStorage.getItem('blogComments') || '[]');
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if user is logged in
+            const savedUser = localStorage.getItem('currentUser');
+            if (savedUser) {
+                currentUser = JSON.parse(savedUser);
+                showUserInterface();
+                loadBlogPosts();
+            }
+
+            // Add event listeners
+            document.getElementById('loginForm').addEventListener('submit', handleLogin);
+            document.getElementById('signupForm').addEventListener('submit', handleSignup);
+            document.getElementById('postForm').addEventListener('submit', handlePostSubmit);
+        });
+
+        // Authentication functions
+        function handleSignup(e) {
+            e.preventDefault();
+            const name = document.getElementById('signupName').value;
+            const email = document.getElementById('signupEmail').value;
+            const password = document.getElementById('signupPassword').value;
+
+            // Check if user already exists
+            if (users.find(user => user.email === email)) {
+                alert('User with this email already exists!');
+                return;
+            }
+
+            // Create new user
+            const newUser = {
+                id: Date.now(),
+                name: name,
+                email: email,
+                password: password // In real app, this should be hashed
+            };
+
+            users.push(newUser);
+            localStorage.setItem('blogUsers', JSON.stringify(users));
+
+            // Auto login
+            currentUser = newUser;
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            
+            closeModal('signupModal');
+            showUserInterface();
+            loadBlogPosts();
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            const user = users.find(u => u.email === email && u.password === password);
+            
+            if (user) {
+                currentUser = user;
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                closeModal('loginModal');
+                showUserInterface();
+                loadBlogPosts();
+            } else {
+                alert('Invalid email or password!');
+            }
+        }
+
+        function logout() {
+            currentUser = null;
+            localStorage.removeItem('currentUser');
+            showGuestInterface();
+        }
+
+        // UI functions
+        function showGuestInterface() {
+            document.getElementById('guestNav').classList.remove('hidden');
+            document.getElementById('userNav').classList.add('hidden');
+            document.getElementById('welcomeSection').classList.remove('hidden');
+            document.getElementById('blogContainer').classList.add('hidden');
+        }
+
+        function showUserInterface() {
+            document.getElementById('guestNav').classList.add('hidden');
+            document.getElementById('userNav').classList.remove('hidden');
+            document.getElementById('currentUser').textContent = currentUser.name;
+            document.getElementById('welcomeSection').classList.add('hidden');
+            document.getElementById('blogContainer').classList.remove('hidden');
+        }
+
+        function showHome() {
+            if (currentUser) {
+                loadBlogPosts();
+            } else {
+                showGuestInterface();
+            }
+        }
+
+        // Modal functions
+        function showLogin() {
+            closeAllModals();
+            document.getElementById('loginModal').style.display = 'block';
+        }
+
+        function showSignup() {
+            closeAllModals();
+            document.getElementById('signupModal').style.display = 'block';
+        }
+
+        function showCreatePost() {
+            editingPostId = null;
+            document.getElementById('postModalTitle').textContent = 'Create New Post';
+            document.getElementById('postTitle').value = '';
+            document.getElementById('postContent').value = '';
+            document.getElementById('postModal').style.display = 'block';
+        }
+
+        function showEditPost(postId) {
+            const post = posts.find(p => p.id === postId);
+            if (post) {
+                editingPostId = postId;
+                document.getElementById('postModalTitle').textContent = 'Edit Post';
+                document.getElementById('postTitle').value = post.title;
+                document.getElementById('postContent').value = post.content;
+                document.getElementById('postModal').style.display = 'block';
+            }
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        function closeAllModals() {
+            const modals = document.querySelectorAll('.modal');
+            modals.forEach(modal => modal.style.display = 'none');
+        }
+
+        // Blog post functions
+        function handlePostSubmit(e) {
+            e.preventDefault();
+            const title = document.getElementById('postTitle').value;
+            const content = document.getElementById('postContent').value;
+
+            if (editingPostId) {
+                // Edit existing post
+                const postIndex = posts.findIndex(p => p.id === editingPostId);
+                if (postIndex !== -1) {
+                    posts[postIndex].title = title;
+                    posts[postIndex].content = content;
+                    posts[postIndex].updatedAt = new Date().toISOString();
+                }
+            } else {
+                // Create new post
+                const newPost = {
+                    id: Date.now(),
+                    title: title,
+                    content: content,
+                    authorId: currentUser.id,
+                    authorName: currentUser.name,
+                    createdAt: new Date().toISOString(),
+                    updatedAt: new Date().toISOString()
+                };
+                posts.unshift(newPost);
+            }
+
+            localStorage.setItem('blogPosts', JSON.stringify(posts));
+            closeModal('postModal');
+            loadBlogPosts();
+        }
+
+        function deletePost(postId) {
+            if (confirm('Are you sure you want to delete this post?')) {
+                posts = posts.filter(p => p.id !== postId);
+                comments = comments.filter(c => c.postId !== postId);
+                localStorage.setItem('blogPosts', JSON.stringify(posts));
+                localStorage.setItem('blogComments', JSON.stringify(comments));
+                loadBlogPosts();
+            }
+        }
+
+        function loadBlogPosts() {
+            const container = document.getElementById('blogPosts');
+            
+            if (posts.length === 0) {
+                container.innerHTML = `
+                    <div class="card text-center">
+                        <h2>No posts yet!</h2>
+                        <p>Be the first to share your thoughts.</p>
+                        <button class="btn btn-primary" onclick="showCreatePost()">Create Your First Post</button>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = posts.map(post => `
+                <div class="blog-post">
+                    <h2>${escapeHtml(post.title)}</h2>
+                    <div class="blog-meta">
+                        <span>By ${escapeHtml(post.authorName)} • ${formatDate(post.createdAt)}</span>
+                        ${post.authorId === currentUser.id ? `
+                            <div class="blog-actions">
+                                <button class="btn btn-secondary" onclick="showEditPost(${post.id})">Edit</button>
+                                <button class="btn btn-danger" onclick="deletePost(${post.id})">Delete</button>
+                            </div>
+                        ` : ''}
+                    </div>
+                    <div class="blog-content">${escapeHtml(post.content).replace(/\n/g, '<br>')}</div>
+                    
+                    <div class="comments-section">
+                        <h4>Comments</h4>
+                        <div id="comments-${post.id}">
+                            ${loadComments(post.id)}
+                        </div>
+                        <form onsubmit="addComment(event, ${post.id})" style="margin-top: 15px;">
+                            <div class="form-group">
+                                <textarea placeholder="Write a comment..." required style="min-height: 80px;"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Add Comment</button>
+                        </form>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Comment functions
+        function loadComments(postId) {
+            const postComments = comments.filter(c => c.postId === postId);
+            
+            if (postComments.length === 0) {
+                return '<p style="color: #666; font-style: italic;">No comments yet. Be the first to comment!</p>';
+            }
+
+            return postComments.map(comment => `
+                <div class="comment">
+                    <div class="comment-author">${escapeHtml(comment.authorName)}</div>
+                    <div class="comment-date">${formatDate(comment.createdAt)}</div>
+                    <div>${escapeHtml(comment.content).replace(/\n/g, '<br>')}</div>
+                </div>
+            `).join('');
+        }
+
+        function addComment(e, postId) {
+            e.preventDefault();
+            const textarea = e.target.querySelector('textarea');
+            const content = textarea.value.trim();
+            
+            if (!content) return;
+
+            const newComment = {
+                id: Date.now(),
+                postId: postId,
+                content: content,
+                authorId: currentUser.id,
+                authorName: currentUser.name,
+                createdAt: new Date().toISOString()
+            };
+
+            comments.push(newComment);
+            localStorage.setItem('blogComments', JSON.stringify(comments));
+            
+            // Refresh comments for this post
+            document.getElementById(`comments-${postId}`).innerHTML = loadComments(postId);
+            textarea.value = '';
+        }
+
+        // Utility functions
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString() + ' at ' + date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        }
+
+        // Close modals when clicking outside
+        window.onclick = function(event) {
+            const modals = document.querySelectorAll('.modal');
+            modals.forEach(modal => {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        }
+    </script>
+</body>
+</html>
